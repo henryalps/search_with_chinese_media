@@ -1,10 +1,10 @@
 <div align="center">
-<h1 align="center">Search with Chinese Media</h1>
+<h1 align="center">Search with Chinese Social Media</h1>
 Build A Chinese Media search engine using less than 500 lines of code with `lepton`, leveraging the data from Weibo, Little Red Book and many other social media platforms.
 <br/>
 <a href="https://search.lepton.run/" target="_blank"> Live Demo </a>
 <br/>
-<img width="70%" src="https://github.com/henryalps/search_with_chinese_media/static/demo.png">
+<img width="70%" src="https://github.com/henryalps/search_with_chinese_media/static/images/demo.png">
 </div>
 
 
