@@ -90,15 +90,17 @@ class WeiboCrawler(AbstractCrawler):
                 await self.wb_client.update_cookies(browser_context=self.browser_context)
 
             crawler_type_var.set(self.crawler_type)
+            results = []
             if self.crawler_type == "search":
                 # Search for video and retrieve their comment information.
-                await self.search()
+                results = await self.search()
             elif self.crawler_type == "detail":
                 # Get the information and comments of the specified post
-                await self.get_specified_notes()
+                results = await self.get_specified_notes()
             else:
                 pass
             utils.logger.info("[WeiboCrawler.start] Weibo Crawler finished ...")
+            return results
 
     async def search(self):
         """
@@ -110,6 +112,7 @@ class WeiboCrawler(AbstractCrawler):
         if config.CRAWLER_MAX_NOTES_COUNT < weibo_limit_count:
             config.CRAWLER_MAX_NOTES_COUNT = weibo_limit_count
         start_page = self.start_page
+        results = []
         for keyword in self.keyword.split(","):
             utils.logger.info(f"[WeiboCrawler.search] Current search keyword: {keyword}")
             page = 1
@@ -131,11 +134,13 @@ class WeiboCrawler(AbstractCrawler):
                         mblog: Dict = note_item.get("mblog")
                         if mblog:
                             note_id_list.append(mblog.get("id"))
+                            results.append(note_item)
                             await weibo_store.update_weibo_note(note_item)
                             await self.get_note_images(mblog)
 
                 page += 1
                 await self.batch_get_notes_comments(note_id_list)
+        return results
 
     async def get_specified_notes(self):
         """
@@ -148,10 +153,13 @@ class WeiboCrawler(AbstractCrawler):
             config.WEIBO_SPECIFIED_ID_LIST
         ]
         video_details = await asyncio.gather(*task_list)
+        results = []
         for note_item in video_details:
             if note_item:
+                results.append(note_item)
                 await weibo_store.update_weibo_note(note_item)
         await self.batch_get_notes_comments(config.WEIBO_SPECIFIED_ID_LIST)
+        return results
 
     async def get_note_info_task(self, note_id: str, semaphore: asyncio.Semaphore) -> Optional[Dict]:
         """

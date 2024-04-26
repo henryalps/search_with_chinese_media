@@ -21,6 +21,9 @@ from leptonai.photon.types import to_bool
 from leptonai.api.workspace import WorkspaceInfoLocalRecord
 from leptonai.util import tool
 
+import asyncio
+from main import main
+
 ################################################################################
 # Constant values for the RAG model.
 ################################################################################
@@ -93,6 +96,17 @@ Here are the contexts of the question:
 Remember, based on the original question and related contexts, suggest three such further questions. Do NOT repeat the original question. Each related question should be no longer than 20 words. Here is the original question:
 """
 
+def search_with_weibo(query: str):
+    results = asyncio.run(main(query))
+    contexts = []
+    for result in results:
+        text = result['mblog']['text']
+        contexts.append({
+            "name": text, 
+            "url": result["scheme"], 
+            "snippet": text
+        })
+    return contexts[:REFERENCE_COUNT]
 
 def search_with_bing(query: str, subscription_key: str):
     """
@@ -415,6 +429,9 @@ class RAG(Photon):
                 query,
                 self.search_api_key,
             )
+        elif self.backend == "WEIBO":
+            self.search_function = lambda query: search_with_weibo(
+                query)
         else:
             raise RuntimeError("Backend must be LEPTON, BING, GOOGLE, SERPER or SEARCHAPI.")
         self.model = os.environ["LLM_MODEL"]

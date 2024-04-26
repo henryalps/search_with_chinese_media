@@ -29,7 +29,7 @@ class CrawlerFactory:
         return crawler_class()
 
 
-async def main():
+async def main(query = None):
     # define command line params ...
     parser = argparse.ArgumentParser(description='Media crawler program.')
     parser.add_argument('--platform', type=str, help='Media platform select (xhs | dy | ks | bili | wb)',
@@ -54,12 +54,14 @@ async def main():
         login_type=args.lt,
         crawler_type=args.type,
         start_page=args.start,
-        keyword=args.keywords
+        keyword=query if query else args.keywords
     )
-    await crawler.start()
+    results = await crawler.start()
     
     if config.SAVE_DATA_OPTION == "db":
         await db.close()
+    
+    return results
 
 
 if __name__ == '__main__':
