@@ -4,7 +4,7 @@ Build A Chinese Media search engine using less than 500 lines of code with `lept
 <br/>
 <a href="https://search.lepton.run/" target="_blank"> Live Demo </a>
 <br/>
-<img width="70%" src="https://github.com/henryalps/search_with_chinese_media/static/images/demo.png">
+<img width="70%" src="https://github.com/henryalps/search_with_chinese_media/blob/main/static/images/demo.png">
 </div>
 
 
