@@ -83,3 +83,7 @@ lep photon run -n search-with-lepton-modified -m search_with_lepton.py --env BAC
 ```
 
 Learn more about `lep photon` [here](https://www.lepton.ai/docs).
+
+## LISCENSE
+
+![非商业使用许可证](LICENSE)
